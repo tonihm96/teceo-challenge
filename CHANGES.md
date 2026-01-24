@@ -1,2 +1,3 @@
 - Adicionado valor máximo para o campo "limit" no BaseFilter para evitar sobrecarga do banco de dados e da API
 - Adicionado valor padrão para o campo "limit" no BaseFilter para garantir que sempre haja um limite definido nas consultas
+- Referência "productSize" no model Sku estava apontando para "Color", corrigido para "ProductSize"
