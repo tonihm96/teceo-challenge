@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 
 export default abstract class BaseFilter<T extends ObjectLiteral> {
@@ -19,6 +19,7 @@ export default abstract class BaseFilter<T extends ObjectLiteral> {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(100)
   limit?: number;
 
   abstract createWhere(queryBuilder: SelectQueryBuilder<T>, alias: string): void;

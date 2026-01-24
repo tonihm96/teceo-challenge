@@ -1,0 +1,1 @@
+- Adicionado valor máximo para evitar sobrecarga do banco de dados e da API
