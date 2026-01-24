@@ -20,7 +20,7 @@ export default abstract class BaseFilter<T extends ObjectLiteral> {
   @IsInt()
   @Min(1)
   @Max(100)
-  limit?: number;
+  limit: number = 10;
 
   abstract createWhere(queryBuilder: SelectQueryBuilder<T>, alias: string): void;
 

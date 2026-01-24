@@ -1,1 +1,2 @@
-- Adicionado valor máximo para evitar sobrecarga do banco de dados e da API
+- Adicionado valor máximo para o campo "limit" no BaseFilter para evitar sobrecarga do banco de dados e da API
+- Adicionado valor padrão para o campo "limit" no BaseFilter para garantir que sempre haja um limite definido nas consultas
