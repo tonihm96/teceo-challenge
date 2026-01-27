@@ -3,3 +3,8 @@
 - Referência "productSize" no model Sku estava apontando para "Color", corrigido para "ProductSize"
 - Filtro por código ou nome de produto em ListProductColorsFilter corrigido para comparar o parâmetro diretamente com os campos "code" e "name" do produto, ao invés de filtrar por IDs de produtos correspondentes
 - Campos "skip" e "take" em BaseFilter foram substituídos por "offset" e "limit" respectivamente, para otimizar o desempenho das consultas com paginação
+- Consulta para listar ProductColors foi otimizada nos pontos a seguir:
+  - A paginação foi otimizada para utilizar "OFFSET" e "LIMIT" ao invés dos métodos "skip" e "take" do TypeORM, que geram consultas menos eficientes para o volume de dados esperado
+  - O método foi reestruturado para buscar primeiro os dados em ProductColors, e depois buscar os dados relacionados (produtos, cores e preços) em lotes, ao invés de buscar individualmente para cada ProductColor retornado - isso também reduziu o número de conexões com o banco de dados - eliminando o problema de N+1 queries
+  - A busca pelos preços mínimos foi otimizada para utilizar uma única consulta agregada, ao invés de buscar individualmente para cada ProductColor retornado
+  - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de ProductColors, e usar JOIN apenas se necessário (quando há filtro por código ou nome do produto)
