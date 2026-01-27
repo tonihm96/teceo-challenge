@@ -51,8 +51,24 @@ export default class ProductColorsService {
     const productIds = productColors.map((pc) => pc.productColor_product_id);
     const colorIds = productColors.map((pc) => pc.productColor_color_id);
 
+    const [productsByProductIds, colorsByColorIds, pricesByProductColorIds] = await Promise.all([
+      this.getProductsByProductIds(productIds),
+      this.getColorsByColorIds(colorIds),
+      this.getPricesByProductColorIds(productColorIds),
+    ]);
+
+    const productColorsList = this.buildListProductColorsResult(
+      productColors,
+      productsByProductIds,
+      colorsByColorIds,
+      pricesByProductColorIds,
+    );
+
+    return Page.of(productColorsList, total);
+  }
+
+  private async getProductsByProductIds(productIds: string[]): Promise<Product[]> {
     const uniqueProductIds = Array.from(new Set(productIds));
-    const uniqueColorIds = Array.from(new Set(colorIds));
 
     const productsByProductIdsQueryBuilder = this.repository.manager
       .createQueryBuilder(Product, 'product')
@@ -60,12 +76,28 @@ export default class ProductColorsService {
         productIds: uniqueProductIds,
       });
 
+    const productsByProductIds = await productsByProductIdsQueryBuilder.getMany();
+
+    return productsByProductIds;
+  }
+
+  private async getColorsByColorIds(colorIds: string[]): Promise<Color[]> {
+    const uniqueColorIds = Array.from(new Set(colorIds));
+
     const colorsByColorIdsQueryBuilder = this.repository.manager
       .createQueryBuilder(Color, 'color')
       .where('color.id IN (:...colorIds)', {
         colorIds: uniqueColorIds,
       });
 
+    const colorsByColorIds = await colorsByColorIdsQueryBuilder.getMany();
+
+    return colorsByColorIds;
+  }
+
+  private async getPricesByProductColorIds(
+    productColorIds: string[],
+  ): Promise<RawPricesByProductColorIdsDTO[]> {
     const pricesByProductColorIdsQueryBuilder = this.repository.manager
       .createQueryBuilder(Sku, 'sku')
       .select('sku.product_color_id', 'productColorId')
@@ -73,12 +105,18 @@ export default class ProductColorsService {
       .where('sku.product_color_id IN (:...productColorIds)', { productColorIds: productColorIds })
       .groupBy('sku.product_color_id');
 
-    const [productsByProductIds, colorsByColorIds, pricesByProductColorIds] = await Promise.all([
-      productsByProductIdsQueryBuilder.getMany(),
-      colorsByColorIdsQueryBuilder.getMany(),
-      pricesByProductColorIdsQueryBuilder.getRawMany<RawPricesByProductColorIdsDTO>(),
-    ]);
+    const pricesByProductColorIds =
+      await pricesByProductColorIdsQueryBuilder.getRawMany<RawPricesByProductColorIdsDTO>();
 
+    return pricesByProductColorIds;
+  }
+
+  private buildListProductColorsResult(
+    productColors: RawListProductColorDTO[],
+    productsByProductIds: Product[],
+    colorsByColorIds: Color[],
+    pricesByProductColorIds: RawPricesByProductColorIdsDTO[],
+  ) {
     const productMap = new Map(productsByProductIds.map((p) => [p.id, p]));
     const colorMap = new Map(colorsByColorIds.map((c) => [c.id, c]));
     const priceMap = new Map(
@@ -100,6 +138,6 @@ export default class ProductColorsService {
       };
     });
 
-    return Page.of(result, total);
+    return result;
   }
 }
