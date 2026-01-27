@@ -31,11 +31,12 @@ const HomeProductColorList = () => {
   const virtualizedProductColors = virtualizer.getVirtualItems();
   const totalSize = virtualizer.getTotalSize();
   const paddingTop =
-    virtualizedProductColors.length > 0 ? virtualizedProductColors[0].start : 0;
+    virtualizedProductColors.length > 0
+      ? (virtualizedProductColors.at(0)?.start ?? 0)
+      : 0;
   const paddingBottom =
     virtualizedProductColors.length > 0
-      ? totalSize -
-        virtualizedProductColors[virtualizedProductColors.length - 1].end
+      ? totalSize - (virtualizedProductColors.at(-1)?.end ?? 0)
       : 0;
 
   if (status === 'pending') {
