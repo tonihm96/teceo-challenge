@@ -8,7 +8,7 @@ const homeRepository = () => {
     return api.get<PageDTO<ProductColorDTO>>('/product-colors', {
       params: {
         limit,
-        skip: page * limit,
+        offset: page * limit,
         productCodeOrName: search,
       },
     });

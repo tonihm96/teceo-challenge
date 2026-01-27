@@ -9,7 +9,7 @@ const ordersRepository = () => {
     return api.get<PageDTO<OrderDTO>>('/orders', {
       params: {
         limit,
-        skip: page * limit,
+        offset: page * limit,
         customerNameOrEmail: search,
       },
     });

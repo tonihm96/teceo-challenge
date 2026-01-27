@@ -1,3 +1,5 @@
+## Backend
+
 - Adicionado valor máximo para o campo "limit" no BaseFilter para evitar sobrecarga do banco de dados e da API
 - Adicionado valor padrão para o campo "limit" no BaseFilter para garantir que sempre haja um limite definido nas consultas
 - Referência "productSize" no model Sku estava apontando para "Color", corrigido para "ProductSize"
@@ -8,3 +10,7 @@
   - O método foi reestruturado para buscar primeiro os dados em ProductColors, e depois buscar os dados relacionados (produtos, cores e preços) em lotes, ao invés de buscar individualmente para cada ProductColor retornado - isso também reduziu o número de conexões com o banco de dados - eliminando o problema de N+1 queries
   - A busca pelos preços mínimos foi otimizada para utilizar uma única consulta agregada, ao invés de buscar individualmente para cada ProductColor retornado
   - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de ProductColors, e usar JOIN apenas se necessário (quando há filtro por código ou nome do produto)
+
+## Frontend
+
+- Parâmetros de paginação atualizados para utilizar "offset" ao invés de "skip", alinhando com as mudanças no backend
