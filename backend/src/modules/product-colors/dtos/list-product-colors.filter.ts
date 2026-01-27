@@ -11,9 +11,7 @@ export default class ListProductColorsFilter extends BaseFilter<ProductColor> {
   createWhere(queryBuilder: SelectQueryBuilder<ProductColor>): void {
     if (this.productCodeOrName) {
       queryBuilder.andWhere(
-        `product.id IN (
-          SELECT p2.id FROM products p2 WHERE p2.code ILIKE (:productCodeOrName) OR p2.name ILIKE (:productCodeOrName)
-        )`,
+        '(product.code ILIKE :productCodeOrName OR product.name ILIKE :productCodeOrName)',
         { productCodeOrName: `%${this.productCodeOrName}%` },
       );
     }
