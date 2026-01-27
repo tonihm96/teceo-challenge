@@ -1,10 +1,15 @@
 import { api } from '../../../config/config';
 import type { PageDTO } from '../../../interfaces/page.interface';
+import type { OrdersRepositoryGetOrdersOptions } from '../interfaces/orders-repository-get-orders-options.interface';
 import type { OrderStatus } from '../enums/orderStatus.enum';
 import type { OrderDTO } from '../interfaces/order.dto';
 
 const ordersRepository = () => {
-  const getOrders = (page: number, search?: string) => {
+  const getOrders = ({
+    page,
+    signal,
+    search,
+  }: OrdersRepositoryGetOrdersOptions) => {
     const limit = 50;
     return api.get<PageDTO<OrderDTO>>('/orders', {
       params: {
@@ -12,6 +17,7 @@ const ordersRepository = () => {
         offset: page * limit,
         customerNameOrEmail: search,
       },
+      signal,
     });
   };
 

@@ -15,14 +15,15 @@ const useOrdersList = () => {
 
   const infiniteQuery = useInfiniteQuery({
     queryKey,
-    queryFn: async ({ pageParam }) => {
+    queryFn: async ({ pageParam, signal }) => {
       return handleLoadingStatus<OrderDTO[]>({
         disabled: !search?.length,
         requestFn: async () => {
-          const response = await ordersRepository().getOrders(
-            pageParam,
-            search
-          );
+          const response = await ordersRepository().getOrders({
+            page: pageParam,
+            search,
+            signal,
+          });
           return response.data.data;
         },
       });
@@ -42,15 +43,15 @@ const useOrdersList = () => {
 
     const orderIds = isMassAction ? selectedOrderIds : [orderId];
 
-    queryClient.setQueryData<{ pages: OrderDTO[][] }>(queryKey, oldData => {
+    queryClient.setQueryData<{ pages: OrderDTO[][] }>(queryKey, (oldData) => {
       if (!oldData) {
         return oldData;
       }
 
       return {
         ...oldData,
-        pages: oldData?.pages?.map(page =>
-          page.map(order =>
+        pages: oldData?.pages?.map((page) =>
+          page.map((order) =>
             orderIds.includes(order.id)
               ? { ...order, status: newStatus }
               : order
@@ -77,9 +78,9 @@ const useOrdersList = () => {
   };
 
   const toggleOrderId = (orderId: string) => {
-    setSelectedOrderIds(prev =>
+    setSelectedOrderIds((prev) =>
       prev.includes(orderId)
-        ? prev.filter(id => id !== orderId)
+        ? prev.filter((id) => id !== orderId)
         : [...prev, orderId]
     );
   };

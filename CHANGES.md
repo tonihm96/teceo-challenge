@@ -15,3 +15,4 @@
 ## Frontend
 
 - Parâmetros de paginação atualizados para utilizar "offset" ao invés de "skip", alinhando com as mudanças no backend
+- Parâmetro "signal" foi adicionado a todas as chamadas de repositório para evitar chamadas desnecessárias quando o componente é desmontado ou a consulta é cancelada, e para organizar melhor os parâmetros das funções, uma interface options foi criada para os métodos que possuem múltiplos parâmetros

@@ -8,11 +8,15 @@ const useHomeProductColorList = () => {
 
   const infiniteQuery = useInfiniteQuery({
     queryKey: ['product-colors', search],
-    queryFn: async ({ pageParam }) => {
+    queryFn: async ({ pageParam, signal }) => {
       return handleLoadingStatus<ProductColorDTO[]>({
         disabled: !search?.length,
         requestFn: async () => {
-          const response = await homeRepository().getProductColors(pageParam, search);
+          const response = await homeRepository().getProductColors({
+            page: pageParam,
+            search,
+            signal,
+          });
           return response.data.data;
         },
       });
