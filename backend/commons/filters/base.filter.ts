@@ -13,7 +13,7 @@ export default abstract class BaseFilter<T extends ObjectLiteral> {
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  skip?: number;
+  offset?: number;
 
   @IsOptional()
   @Type(() => Number)
@@ -25,11 +25,11 @@ export default abstract class BaseFilter<T extends ObjectLiteral> {
   abstract createWhere(queryBuilder: SelectQueryBuilder<T>, alias: string): void;
 
   paginate(queryBuilder: SelectQueryBuilder<T>) {
-    if (this.skip) {
-      queryBuilder.skip(this.skip);
+    if (this.offset) {
+      queryBuilder.offset(this.offset);
     }
     if (this.limit) {
-      queryBuilder.take(this.limit);
+      queryBuilder.limit(this.limit);
     }
   }
 }

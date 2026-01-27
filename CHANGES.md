@@ -2,3 +2,4 @@
 - Adicionado valor padrão para o campo "limit" no BaseFilter para garantir que sempre haja um limite definido nas consultas
 - Referência "productSize" no model Sku estava apontando para "Color", corrigido para "ProductSize"
 - Filtro por código ou nome de produto em ListProductColorsFilter corrigido para comparar o parâmetro diretamente com os campos "code" e "name" do produto, ao invés de filtrar por IDs de produtos correspondentes
+- Campos "skip" e "take" em BaseFilter foram substituídos por "offset" e "limit" respectivamente, para otimizar o desempenho das consultas com paginação
