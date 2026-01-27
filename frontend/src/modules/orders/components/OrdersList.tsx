@@ -123,6 +123,7 @@ const OrdersList = () => {
               return (
                 <OrdersListItem
                   key={key}
+                  ref={virtualizer.measureElement}
                   item={OrderDTO.toListItem(order)}
                   onToggle={toggleOrderId}
                   isToggled={selectedOrderIds.includes(order.id)}

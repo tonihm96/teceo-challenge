@@ -14,8 +14,10 @@ import type { ListItem } from '../interfaces/orders-list-item.interface';
 import { orderStatusMapper } from '../utils/orderStatus.mapper';
 import OrderStatusDot from './OrderStatusDot';
 import { coolToggledAnimation } from './orderListItem.styles';
+import type { Ref } from 'react';
 
 interface OrdersListItemProps {
+  ref?: Ref<HTMLTableRowElement>; // react 19 allows passing ref as prop
   item: ListItem;
   onChangeStatus: (newStatus: OrderStatus) => void;
   isToggled: boolean;
@@ -23,6 +25,7 @@ interface OrdersListItemProps {
 }
 
 const OrdersListItem = ({
+  ref,
   item,
   onChangeStatus,
   isToggled,
@@ -32,6 +35,7 @@ const OrdersListItem = ({
 
   return (
     <TableRow
+      ref={ref}
       sx={{
         '&:last-child td, &:last-child th': { border: 0 },
         backgroundColor: isToggled
@@ -77,7 +81,7 @@ const OrdersListItem = ({
           variant="filled"
           size="small"
           value={item.status}
-          onChange={e => onChangeStatus(e.target.value)}
+          onChange={(e) => onChangeStatus(e.target.value)}
           MenuProps={{
             PaperProps: {
               sx: { ...(isToggled && coolToggledAnimation) },
