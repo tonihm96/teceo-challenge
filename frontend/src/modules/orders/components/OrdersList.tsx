@@ -43,13 +43,15 @@ const OrdersList = () => {
     getItemKey: (index) => orders.at(index)?.id ?? '',
   });
 
-  const virtualOrders = virtualizer.getVirtualItems();
+  const virtualizedOrders = virtualizer.getVirtualItems();
 
   const totalSize = virtualizer.getTotalSize();
   const paddingTop =
-    virtualOrders.length > 0 ? (virtualOrders.at(0)?.start ?? 0) : 0;
+    virtualizedOrders.length > 0 ? (virtualizedOrders.at(0)?.start ?? 0) : 0;
   const paddingBottom =
-    virtualOrders.length > 0 ? totalSize - (virtualOrders.at(-1)?.end ?? 0) : 0;
+    virtualizedOrders.length > 0
+      ? totalSize - (virtualizedOrders.at(-1)?.end ?? 0)
+      : 0;
 
   const loaderRef = useInfiniteScroll(
     fetchNextPage,
@@ -114,7 +116,7 @@ const OrdersList = () => {
               </TableRow>
             )}
 
-            {virtualOrders.map(({ index, key }) => {
+            {virtualizedOrders.map(({ index, key }) => {
               const order = orders.at(index);
               if (!order) return null;
               return (
