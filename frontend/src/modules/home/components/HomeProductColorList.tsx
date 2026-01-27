@@ -28,13 +28,14 @@ const HomeProductColorList = () => {
     overscan: 2,
   });
 
-  const virtualProductColors = virtualizer.getVirtualItems();
+  const virtualizedProductColors = virtualizer.getVirtualItems();
   const totalSize = virtualizer.getTotalSize();
   const paddingTop =
-    virtualProductColors.length > 0 ? virtualProductColors[0].start : 0;
+    virtualizedProductColors.length > 0 ? virtualizedProductColors[0].start : 0;
   const paddingBottom =
-    virtualProductColors.length > 0
-      ? totalSize - virtualProductColors[virtualProductColors.length - 1].end
+    virtualizedProductColors.length > 0
+      ? totalSize -
+        virtualizedProductColors[virtualizedProductColors.length - 1].end
       : 0;
 
   if (status === 'pending') {
@@ -57,7 +58,7 @@ const HomeProductColorList = () => {
     <>
       <div style={{ height: paddingTop }} />
 
-      {virtualProductColors.map(({ index, key }) => {
+      {virtualizedProductColors.map(({ index, key }) => {
         const startIndex = index * ROW_COLUMN_COUNT;
         const productColorColumns = productColors.slice(
           startIndex,
