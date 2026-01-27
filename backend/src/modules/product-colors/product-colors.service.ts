@@ -88,7 +88,8 @@ export default class ProductColorsService {
       .createQueryBuilder(Color, 'color')
       .where('color.id IN (:...colorIds)', {
         colorIds: uniqueColorIds,
-      });
+      })
+      .orderBy('lower(color.name)', 'ASC');
 
     const colorsByColorIds = await colorsByColorIdsQueryBuilder.getMany();
 
