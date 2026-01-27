@@ -6,7 +6,14 @@ import homeRepository from '../../repositories/home.repository';
 const useHomeProductColorList = () => {
   const { search, handleLoadingStatus } = useApplicationContext();
 
-  const infiniteQuery = useInfiniteQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    isError,
+  } = useInfiniteQuery({
     queryKey: ['product-colors', search],
     queryFn: async ({ pageParam, signal }) => {
       return handleLoadingStatus<ProductColorDTO[]>({
@@ -31,7 +38,14 @@ const useHomeProductColorList = () => {
     initialPageParam: 0,
   });
 
-  return infiniteQuery;
+  return {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    isError,
+  };
 };
 
 export default useHomeProductColorList;

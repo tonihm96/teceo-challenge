@@ -25,7 +25,8 @@ const OrdersList = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    status,
+    isPending,
+    isError,
     onChangeStatus,
     toggleOrderId,
     selectedOrderIds,
@@ -59,7 +60,7 @@ const OrdersList = () => {
     isFetchingNextPage
   );
 
-  if (status === 'pending') {
+  if (isPending) {
     return (
       <Grid container spacing={1}>
         {new Array(16).fill(1).map((_, index: number) => (
@@ -71,7 +72,7 @@ const OrdersList = () => {
     );
   }
 
-  if (status === 'error') {
+  if (isError) {
     return <p>error</p>;
   }
 

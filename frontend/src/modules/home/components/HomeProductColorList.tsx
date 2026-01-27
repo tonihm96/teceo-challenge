@@ -8,8 +8,14 @@ import useHomeProductColorList from './hooks/useHomeProductColorList';
 const ROW_COLUMN_COUNT = 4;
 
 const HomeProductColorList = () => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useHomeProductColorList();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    isError,
+  } = useHomeProductColorList();
 
   const loaderRef = useInfiniteScroll(
     fetchNextPage,
@@ -39,7 +45,7 @@ const HomeProductColorList = () => {
       ? totalSize - (virtualizedProductColors.at(-1)?.end ?? 0)
       : 0;
 
-  if (status === 'pending') {
+  if (isPending) {
     return (
       <Grid container spacing={2}>
         {new Array(8).fill(1).map((_, index: number) => (
@@ -51,7 +57,7 @@ const HomeProductColorList = () => {
     );
   }
 
-  if (status === 'error') {
+  if (isError) {
     return <p>error</p>;
   }
 

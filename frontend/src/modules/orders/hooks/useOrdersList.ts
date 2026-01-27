@@ -13,7 +13,14 @@ const useOrdersList = () => {
 
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
 
-  const infiniteQuery = useInfiniteQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    isError,
+  } = useInfiniteQuery({
     queryKey,
     queryFn: async ({ pageParam, signal }) => {
       return handleLoadingStatus<OrderDTO[]>({
@@ -85,7 +92,17 @@ const useOrdersList = () => {
     );
   };
 
-  return { ...infiniteQuery, onChangeStatus, toggleOrderId, selectedOrderIds };
+  return {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending,
+    isError,
+    onChangeStatus,
+    toggleOrderId,
+    selectedOrderIds,
+  };
 };
 
 export default useOrdersList;
