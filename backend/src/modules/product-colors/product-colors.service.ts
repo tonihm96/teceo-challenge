@@ -33,6 +33,10 @@ export default class ProductColorsService {
 
     const total = await countQueryBuilder.getCount();
 
+    if (total === 0) {
+      return Page.EMPTY;
+    }
+
     const productColorQueryBuilder = this.createQueryBuilder()
       .leftJoin('productColor.product', 'product')
       .orderBy('product.name', 'ASC')

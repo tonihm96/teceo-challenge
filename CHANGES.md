@@ -10,6 +10,7 @@
   - O método foi reestruturado para buscar primeiro os dados em ProductColors, e depois buscar os dados relacionados (produtos, cores e preços) em lotes, ao invés de buscar individualmente para cada ProductColor retornado - isso também reduziu o número de conexões com o banco de dados - eliminando o problema de N+1 queries
   - A busca pelos preços mínimos foi otimizada para utilizar uma única consulta agregada, ao invés de buscar individualmente para cada ProductColor retornado
   - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de ProductColors, e usar JOIN apenas se necessário (quando há filtro por código ou nome do produto)
+  - Se o total de registros for zero, a consulta principal é evitada e uma página vazia é retornada imediatamente
 
 ## Frontend
 
