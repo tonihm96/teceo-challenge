@@ -17,6 +17,7 @@
 - Parâmetros de paginação atualizados para utilizar "offset" ao invés de "skip", alinhando com as mudanças no backend
 - Parâmetro "signal" foi adicionado a todas as chamadas de repositório para cancelar requisições pendentes quando o componente é desmontado ou a consulta é cancelada, e para organizar melhor os parâmetros das funções, uma interface options foi criada para os métodos que possuem múltiplos parâmetros
 - min-width de 100vw removido do CSS global para evitar scroll horizontal indesejado
+- min-height de 100vh removido do CSS global para evitar scroll vertical indesejado
 - Componente OrdersList foi otimizado para utilizar virtualização de linhas com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas de pedidos longas
 - Componente HomeProductColorList foi otimizado para utilizar virtualização de cada linha da grid de produtos com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas longas
 - Valor de limite de paginação ajustado para 12 em home.repository.ts para alinhar com a quantidade de colunas exibidas na grid de produtos
