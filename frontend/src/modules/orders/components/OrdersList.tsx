@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo } from 'react';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
 import useOrdersList from '../hooks/useOrdersList';
 import { OrderDTO } from '../interfaces/order.dto';
@@ -34,6 +35,21 @@ const OrdersList = () => {
     () => data?.pages.flat() || ([] as OrderDTO[]),
     [data?.pages]
   );
+
+  const virtualizer = useWindowVirtualizer({
+    count: orders.length,
+    estimateSize: () => 53,
+    overscan: 5,
+    getItemKey: (index) => orders.at(index)?.id ?? '',
+  });
+
+  const virtualOrders = virtualizer.getVirtualItems();
+
+  const totalSize = virtualizer.getTotalSize();
+  const paddingTop =
+    virtualOrders.length > 0 ? (virtualOrders.at(0)?.start ?? 0) : 0;
+  const paddingBottom =
+    virtualOrders.length > 0 ? totalSize - (virtualOrders.at(-1)?.end ?? 0) : 0;
 
   const loaderRef = useInfiniteScroll(
     fetchNextPage,
@@ -90,18 +106,35 @@ const OrdersList = () => {
               </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {orders.map(order => (
-              <OrdersListItem
-                key={order.id}
-                item={OrderDTO.toListItem(order)}
-                onToggle={toggleOrderId}
-                isToggled={selectedOrderIds.includes(order.id)}
-                onChangeStatus={newStatus =>
-                  onChangeStatus(newStatus, order.id)
-                }
-              />
-            ))}
+            {paddingTop > 0 && (
+              <TableRow style={{ height: paddingTop }}>
+                <TableCell colSpan={5} style={{ border: 0, padding: 0 }} />
+              </TableRow>
+            )}
+
+            {virtualOrders.map(({ index, key }) => {
+              const order = orders.at(index);
+              if (!order) return null;
+              return (
+                <OrdersListItem
+                  key={key}
+                  item={OrderDTO.toListItem(order)}
+                  onToggle={toggleOrderId}
+                  isToggled={selectedOrderIds.includes(order.id)}
+                  onChangeStatus={(newStatus) =>
+                    onChangeStatus(newStatus, order.id)
+                  }
+                />
+              );
+            })}
+
+            {paddingBottom > 0 && (
+              <TableRow style={{ height: paddingBottom }}>
+                <TableCell colSpan={5} style={{ border: 0, padding: 0 }} />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
