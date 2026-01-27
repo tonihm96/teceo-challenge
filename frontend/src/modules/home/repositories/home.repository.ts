@@ -9,7 +9,7 @@ const homeRepository = () => {
     signal,
     search,
   }: HomeRepositoryGetProductColorsOptions) => {
-    const limit = 10;
+    const limit = 12;
     return api.get<PageDTO<ProductColorDTO>>('/product-colors', {
       params: {
         limit,

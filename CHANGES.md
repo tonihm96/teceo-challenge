@@ -19,3 +19,4 @@
 - min-width de 100vw removido do CSS global para evitar scroll horizontal indesejado
 - Componente OrdersList foi otimizado para utilizar virtualização de linhas com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas de pedidos longas
 - Componente HomeProductColorList foi otimizado para utilizar virtualização de cada linha da grid de produtos com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas longas
+- Valor de limite de paginação ajustado para 12 em home.repository.ts para alinhar com a quantidade de colunas exibidas na grid de produtos
