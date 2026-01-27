@@ -18,3 +18,4 @@
 - Parâmetro "signal" foi adicionado a todas as chamadas de repositório para cancelar requisições pendentes quando o componente é desmontado ou a consulta é cancelada, e para organizar melhor os parâmetros das funções, uma interface options foi criada para os métodos que possuem múltiplos parâmetros
 - min-width de 100vw removido do CSS global para evitar scroll horizontal indesejado
 - Componente OrdersList foi otimizado para utilizar virtualização de linhas com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas de pedidos longas
+- Componente HomeProductColorList foi otimizado para utilizar virtualização de cada linha da grid de produtos com @tanstack/react-virtual, melhorando o desempenho ao renderizar listas longas

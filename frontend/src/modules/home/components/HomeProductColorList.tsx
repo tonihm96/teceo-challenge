@@ -1,14 +1,41 @@
-import { CircularProgress, Grid, Skeleton, Stack } from '@mui/material';
+import { Box, CircularProgress, Grid, Skeleton, Stack } from '@mui/material';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
 import { ProductColorDTO } from '../interfaces/product-color.dto';
 import HomeProductColorListItem from './HomeProductColorListItem';
 import useHomeProductColorList from './hooks/useHomeProductColorList';
 
+const ROW_COLUMN_COUNT = 4;
+
 const HomeProductColorList = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useHomeProductColorList();
 
-  const loaderRef = useInfiniteScroll(fetchNextPage, !!hasNextPage, isFetchingNextPage);
+  const loaderRef = useInfiniteScroll(
+    fetchNextPage,
+    !!hasNextPage,
+    isFetchingNextPage
+  );
+
+  const productColors = data?.pages.flat() || [];
+  const productColorsRowCount = Math.ceil(
+    productColors.length / ROW_COLUMN_COUNT
+  );
+
+  const virtualizer = useWindowVirtualizer({
+    count: productColorsRowCount,
+    estimateSize: () => 380,
+    overscan: 2,
+  });
+
+  const virtualProductColors = virtualizer.getVirtualItems();
+  const totalSize = virtualizer.getTotalSize();
+  const paddingTop =
+    virtualProductColors.length > 0 ? virtualProductColors[0].start : 0;
+  const paddingBottom =
+    virtualProductColors.length > 0
+      ? totalSize - virtualProductColors[virtualProductColors.length - 1].end
+      : 0;
 
   if (status === 'pending') {
     return (
@@ -26,17 +53,38 @@ const HomeProductColorList = () => {
     return <p>error</p>;
   }
 
-  const productColors = data.pages.flat();
-
   return (
     <>
-      <Grid container spacing={2}>
-        {productColors.map((productColor) => (
-          <Grid size={{ xs: 6, sm: 4, md: 3 }} key={productColor.id}>
-            <HomeProductColorListItem item={ProductColorDTO.toCardItem(productColor)} />
-          </Grid>
-        ))}
-      </Grid>
+      <div style={{ height: paddingTop }} />
+
+      {virtualProductColors.map(({ index, key }) => {
+        const startIndex = index * ROW_COLUMN_COUNT;
+        const productColorColumns = productColors.slice(
+          startIndex,
+          startIndex + ROW_COLUMN_COUNT
+        );
+
+        return (
+          <Box
+            key={key}
+            data-index={index}
+            ref={virtualizer.measureElement}
+            sx={{ marginBottom: 2 }}
+          >
+            <Grid container spacing={2}>
+              {productColorColumns.map((productColor) => (
+                <Grid size={{ xs: 6, sm: 4, md: 3 }} key={productColor.id}>
+                  <HomeProductColorListItem
+                    item={ProductColorDTO.toCardItem(productColor)}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        );
+      })}
+
+      <div style={{ height: paddingBottom }} />
 
       <div ref={loaderRef} style={{ height: 10 }} />
 
