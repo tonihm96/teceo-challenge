@@ -11,6 +11,11 @@
   - A busca pelos preços mínimos foi otimizada para utilizar uma única consulta agregada, ao invés de buscar individualmente para cada ProductColor retornado
   - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de ProductColors, e usar JOIN apenas se necessário (quando há filtro por código ou nome do produto)
   - Se o total de registros for zero, a consulta principal é evitada e uma página vazia é retornada imediatamente
+- Consulta para listar Orders foi otimizada nos pontos a seguir:
+  - A paginação foi otimizada para utilizar "OFFSET" e "LIMIT" ao invés dos métodos "skip" e "take" do TypeORM, assim como no método list de ProductColors
+  - A busca pelos pedidos foi reestruturada para buscar primeiro os dados em Orders, buscar os itens relacionados em lote, e depois unir os dados em memória, reduzindo o número de conexões com o banco de dados e eliminando o problema de N+1 queries. A lógica de cálculo dos totais foi mantida, mas agora opera sobre os dados já carregados em memória
+  - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de Orders, e usar JOIN apenas se necessário (quando há filtro por nome ou email do cliente)
+  - Se o total de registros for zero, a consulta principal é evitada e uma página vazia é retornada imediatamente
 
 ## Frontend
 

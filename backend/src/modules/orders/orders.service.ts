@@ -21,6 +21,20 @@ export default class OrdersService {
   }
 
   async list(filter: ListOrdersFilter): Promise<Page<ListOrdersDTO>> {
+    const countQueryBuilder = this.createQueryBuilder('order');
+
+    if (filter.customerNameOrEmail) {
+      countQueryBuilder.leftJoin('order.customer', 'customer');
+    }
+
+    filter.createWhere(countQueryBuilder);
+
+    const total = await countQueryBuilder.getCount();
+
+    if (total === 0) {
+      return Page.EMPTY;
+    }
+
     const queryBuilder = this.createQueryBuilder('order')
       .leftJoinAndSelect('order.customer', 'customer')
       .orderBy('order.id', 'ASC');
@@ -28,22 +42,41 @@ export default class OrdersService {
     filter.createWhere(queryBuilder);
     filter.paginate(queryBuilder);
 
-    const [orders, count] = await queryBuilder.getManyAndCount();
+    const orders = await queryBuilder.getMany();
     const ordersWithTotals = await this.getOrdersWithTotals(orders);
 
-    return Page.of(ordersWithTotals, count);
+    return Page.of(ordersWithTotals, total);
   }
 
   private async getOrdersWithTotals(orders: Order[]): Promise<ListOrdersDTO[]> {
+    if (!orders.length) {
+      return [];
+    }
+
+    const orderIds = orders.map((order) => order.id);
+
+    const allOrderItems = await this.orderItemsService
+      .createQueryBuilder('orderItem')
+      .leftJoinAndSelect('orderItem.sku', 'sku')
+      .leftJoinAndSelect('sku.productColor', 'productColor')
+      .leftJoinAndSelect('orderItem.order', 'order')
+      .where('order.id IN (:...orderIds)', { orderIds })
+      .getMany();
+
+    const itemsByOrderId = new Map<string, typeof allOrderItems>();
+
+    allOrderItems.forEach((item) => {
+      const orderId = item.order.id;
+      if (!itemsByOrderId.has(orderId)) {
+        itemsByOrderId.set(orderId, []);
+      }
+      itemsByOrderId.get(orderId)?.push(item);
+    });
+
     const ordersWithTotals: ListOrdersDTO[] = [];
 
     for (const order of orders) {
-      const orderItems = await this.orderItemsService
-        .createQueryBuilder('orderItem')
-        .leftJoinAndSelect('orderItem.sku', 'sku')
-        .leftJoinAndSelect('sku.productColor', 'productColor')
-        .where('orderItem.order.id = :orderId', { orderId: order.id })
-        .getMany();
+      const orderItems = itemsByOrderId.get(order.id) || [];
 
       let totalValue = 0;
       orderItems.forEach((orderItem) => {
