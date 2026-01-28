@@ -128,9 +128,7 @@ const OrdersList = () => {
                   item={OrderDTO.toListItem(order)}
                   onToggle={toggleOrderId}
                   isToggled={selectedOrderIds.includes(order.id)}
-                  onChangeStatus={(newStatus) =>
-                    onChangeStatus(newStatus, order.id)
-                  }
+                  onChangeStatus={onChangeStatus}
                 />
               );
             })}
