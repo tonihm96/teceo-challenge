@@ -79,29 +79,33 @@ const OrdersList = () => {
   return (
     <>
       <TableContainer component={Paper} variant="outlined">
-        <Table size="small" aria-label="orders list">
+        <Table
+          size="small"
+          aria-label="orders list"
+          sx={{ tableLayout: 'fixed' }}
+        >
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox" />
               <TableCell variant="head">
                 <Typography>cliente</Typography>
               </TableCell>
-              <TableCell variant="head">
+              <TableCell variant="head" sx={{ width: 80 }}>
                 <Typography>e-mail</Typography>
               </TableCell>
               <TableCell variant="head" align="right">
                 <Typography>quantidade de produto-cor</Typography>
               </TableCell>
-              <TableCell variant="head" align="right">
+              <TableCell variant="head" align="right" sx={{ width: 48 }}>
                 <Typography>peças</Typography>
               </TableCell>
-              <TableCell variant="head" align="right">
+              <TableCell variant="head" align="right" sx={{ width: 72 }}>
                 <Typography>total</Typography>
               </TableCell>
-              <TableCell variant="head" align="right">
+              <TableCell variant="head" align="right" sx={{ width: 112 }}>
                 <Typography>valor médio por produto-cor</Typography>
               </TableCell>
-              <TableCell variant="head" align="right">
+              <TableCell variant="head" align="right" sx={{ width: 80 }}>
                 <Typography>valor médio por peça</Typography>
               </TableCell>
               <TableCell variant="head">
