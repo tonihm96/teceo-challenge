@@ -18,6 +18,7 @@ import type { Ref } from 'react';
 
 interface OrdersListItemProps {
   ref?: Ref<HTMLTableRowElement>; // react 19 allows passing ref as prop
+  'data-index'?: number;
   item: ListItem;
   onChangeStatus: (newStatus: OrderStatus, orderId: string) => void;
   isToggled: boolean;
@@ -30,12 +31,14 @@ const OrdersListItem = ({
   onChangeStatus,
   isToggled,
   onToggle,
+  ...props
 }: OrdersListItemProps) => {
   const { format } = useMoney();
 
   return (
     <TableRow
       ref={ref}
+      data-index={props['data-index']}
       sx={{
         '&:last-child td, &:last-child th': { border: 0 },
         backgroundColor: isToggled
