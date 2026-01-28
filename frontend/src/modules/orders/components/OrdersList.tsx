@@ -39,7 +39,7 @@ const OrdersList = () => {
 
   const virtualizer = useWindowVirtualizer({
     count: orders.length,
-    estimateSize: () => 53,
+    estimateSize: () => 40,
     overscan: 5,
     getItemKey: (index) => orders.at(index)?.id ?? '',
   });
