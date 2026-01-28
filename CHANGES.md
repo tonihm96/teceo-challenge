@@ -18,6 +18,8 @@
   - Se o total de registros for zero, a consulta principal é evitada e uma página vazia é retornada imediatamente
 - No banco de dados diversos índices foram adicionados para otimizar as consultas de listagem de ProductColors e Orders, especialmente para os filtros e junções mais comuns (detalhes dos índices criados estão comentados nos arquivos de migrations)
 
+> Importante: criar os índices no arquivo de migrations antes de testar para as otimizações terem efeito.
+
 ## Frontend
 
 - Parâmetros de paginação atualizados para utilizar "offset" ao invés de "skip", alinhando com as mudanças no backend
