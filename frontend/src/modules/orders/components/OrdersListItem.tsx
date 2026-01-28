@@ -7,6 +7,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { type Ref } from 'react';
 import useMoney from '../../../hooks/useMoney';
 import theme from '../../../theme/theme';
 import type { OrderStatus } from '../enums/orderStatus.enum';
@@ -14,7 +15,6 @@ import type { ListItem } from '../interfaces/orders-list-item.interface';
 import { orderStatusMapper } from '../utils/orderStatus.mapper';
 import OrderStatusDot from './OrderStatusDot';
 import { coolToggledAnimation } from './orderListItem.styles';
-import type { Ref } from 'react';
 
 interface OrdersListItemProps {
   ref?: Ref<HTMLTableRowElement>; // react 19 allows passing ref as prop
