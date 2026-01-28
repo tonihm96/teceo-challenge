@@ -113,7 +113,7 @@ const OrdersList = () => {
           <TableBody>
             {paddingTop > 0 && (
               <TableRow style={{ height: paddingTop }}>
-                <TableCell colSpan={5} style={{ border: 0, padding: 0 }} />
+                <TableCell colSpan={9} style={{ border: 0, padding: 0 }} />
               </TableRow>
             )}
 
@@ -136,7 +136,7 @@ const OrdersList = () => {
 
             {paddingBottom > 0 && (
               <TableRow style={{ height: paddingBottom }}>
-                <TableCell colSpan={5} style={{ border: 0, padding: 0 }} />
+                <TableCell colSpan={9} style={{ border: 0, padding: 0 }} />
               </TableRow>
             )}
           </TableBody>
