@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useApplicationContext } from '../../global/contexts/ApplicationContext';
 import type { OrderStatus } from '../enums/orderStatus.enum';
 import type { OrderDTO } from '../interfaces/order.dto';
@@ -12,6 +12,9 @@ const useOrdersList = () => {
   const queryKey = useMemo(() => ['orders', search], [search]);
 
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
+
+  const selectedOrderIdsRef = useRef(selectedOrderIds);
+  selectedOrderIdsRef.current = selectedOrderIds;
 
   const {
     data,
@@ -47,9 +50,10 @@ const useOrdersList = () => {
 
   const onChangeStatus = useCallback(
     async (newStatus: OrderStatus, orderId: string) => {
-      const isMassAction = selectedOrderIds.includes(orderId);
+      const currentSelectedIds = selectedOrderIdsRef.current;
+      const isMassAction = currentSelectedIds.includes(orderId);
 
-      const orderIds = isMassAction ? selectedOrderIds : [orderId];
+      const orderIds = isMassAction ? currentSelectedIds : [orderId];
 
       queryClient.setQueryData<{ pages: OrderDTO[][] }>(queryKey, (oldData) => {
         if (!oldData) {
@@ -70,10 +74,7 @@ const useOrdersList = () => {
 
       try {
         if (isMassAction) {
-          await ordersRepository().updateBatchOrderStatus(
-            selectedOrderIds,
-            newStatus
-          );
+          await ordersRepository().updateBatchOrderStatus(orderIds, newStatus);
         } else {
           await ordersRepository().updateOrderStatus(orderId, newStatus);
         }
@@ -84,7 +85,7 @@ const useOrdersList = () => {
 
       setSelectedOrderIds([]);
     },
-    [queryClient, queryKey, selectedOrderIds]
+    [queryClient, queryKey]
   );
 
   const toggleOrderId = useCallback((orderId: string) => {

@@ -33,3 +33,4 @@
 - No hook useOrdersList, as funções onChangeStatus e toggleOrderId e a query key foram memoizadas para estabilizar suas referências e evitar re-renderizações desnecessárias dos componentes que as utilizam
 - No componente OrdersListItem a definição da função onChangeStatus foi atualizada para aceitar o ID do pedido como parâmetro, evitando a necessidade de criar uma nova função para cada item da lista
 - No componente OrdersList a tabela foi ajustada para usar tableLayout: fixed e larguras fixas para algumas colunas, melhorando a consistência visual e evitando mudanças de layout frequentes durante a renderização
+- Em useOrdersList, foi criado um ref para armazenar selectedOrderIds ao invés de usar o estado diretamente para manter a referência da função onChangeStatus estável
