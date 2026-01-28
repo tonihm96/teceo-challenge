@@ -34,3 +34,4 @@
 - No componente OrdersListItem a definição da função onChangeStatus foi atualizada para aceitar o ID do pedido como parâmetro, evitando a necessidade de criar uma nova função para cada item da lista
 - No componente OrdersList a tabela foi ajustada para usar tableLayout: fixed e larguras fixas para algumas colunas, melhorando a consistência visual e evitando mudanças de layout frequentes durante a renderização
 - Em useOrdersList, foi criado um ref para armazenar selectedOrderIds ao invés de usar o estado diretamente para manter a referência da função onChangeStatus estável
+- Em OrdersList e OrdersListItem, o tipo do item passado como prop foi alterado para OrderDTO para usar uma referência mais estável e evitar re-renderizações desnecessárias dos itens da lista quando o array de orders muda

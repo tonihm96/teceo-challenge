@@ -7,11 +7,11 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { type Ref } from 'react';
+import { type Ref, memo } from 'react';
 import useMoney from '../../../hooks/useMoney';
 import theme from '../../../theme/theme';
 import type { OrderStatus } from '../enums/orderStatus.enum';
-import type { ListItem } from '../interfaces/orders-list-item.interface';
+import type { OrderDTO } from '../interfaces/order.dto';
 import { orderStatusMapper } from '../utils/orderStatus.mapper';
 import OrderStatusDot from './OrderStatusDot';
 import { coolToggledAnimation } from './orderListItem.styles';
@@ -19,7 +19,7 @@ import { coolToggledAnimation } from './orderListItem.styles';
 interface OrdersListItemProps {
   ref?: Ref<HTMLTableRowElement>; // react 19 allows passing ref as prop
   'data-index'?: number;
-  item: ListItem;
+  item: OrderDTO;
   onChangeStatus: (newStatus: OrderStatus, orderId: string) => void;
   isToggled: boolean;
   onToggle: (orderId: string) => void;
@@ -35,6 +35,7 @@ const OrdersListItem = ({
 }: OrdersListItemProps) => {
   const { format } = useMoney();
 
+  console.log('Rendering item', item.id);
   return (
     <TableRow
       ref={ref}
@@ -54,10 +55,10 @@ const OrdersListItem = ({
         />
       </TableCell>
       <TableCell component="th" scope="row">
-        <Typography variant="body2">{item.customerName}</Typography>
+        <Typography variant="body2">{item.customer.name}</Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="body2">{item.customerEmail}</Typography>
+        <Typography variant="body2">{item.customer.email}</Typography>
       </TableCell>
       <TableCell align="right">
         <Typography variant="body2">{item.totalProductColors}</Typography>
@@ -115,4 +116,4 @@ const OrdersListItem = ({
   );
 };
 
-export default OrdersListItem;
+export default memo(OrdersListItem);

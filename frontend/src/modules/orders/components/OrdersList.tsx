@@ -129,7 +129,7 @@ const OrdersList = () => {
                   key={key}
                   ref={virtualizer.measureElement}
                   data-index={index}
-                  item={OrderDTO.toListItem(order)}
+                  item={order}
                   onToggle={toggleOrderId}
                   isToggled={selectedOrderIds.includes(order.id)}
                   onChangeStatus={onChangeStatus}
