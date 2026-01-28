@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useApplicationContext } from '../../global/contexts/ApplicationContext';
 import type { OrderStatus } from '../enums/orderStatus.enum';
 import type { OrderDTO } from '../interfaces/order.dto';
@@ -9,7 +9,7 @@ const useOrdersList = () => {
   const queryClient = useQueryClient();
 
   const { search, handleLoadingStatus } = useApplicationContext();
-  const queryKey = ['orders', search];
+  const queryKey = useMemo(() => ['orders', search], [search]);
 
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
 
@@ -45,52 +45,55 @@ const useOrdersList = () => {
     initialPageParam: 0,
   });
 
-  const onChangeStatus = async (newStatus: OrderStatus, orderId: string) => {
-    const isMassAction = selectedOrderIds.includes(orderId);
+  const onChangeStatus = useCallback(
+    async (newStatus: OrderStatus, orderId: string) => {
+      const isMassAction = selectedOrderIds.includes(orderId);
 
-    const orderIds = isMassAction ? selectedOrderIds : [orderId];
+      const orderIds = isMassAction ? selectedOrderIds : [orderId];
 
-    queryClient.setQueryData<{ pages: OrderDTO[][] }>(queryKey, (oldData) => {
-      if (!oldData) {
-        return oldData;
+      queryClient.setQueryData<{ pages: OrderDTO[][] }>(queryKey, (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+
+        return {
+          ...oldData,
+          pages: oldData?.pages?.map((page) =>
+            page.map((order) =>
+              orderIds.includes(order.id)
+                ? { ...order, status: newStatus }
+                : order
+            )
+          ),
+        };
+      });
+
+      try {
+        if (isMassAction) {
+          await ordersRepository().updateBatchOrderStatus(
+            selectedOrderIds,
+            newStatus
+          );
+        } else {
+          await ordersRepository().updateOrderStatus(orderId, newStatus);
+        }
+      } catch (err) {
+        queryClient.invalidateQueries({ queryKey });
+        console.error('Failed to update order status:', err);
       }
 
-      return {
-        ...oldData,
-        pages: oldData?.pages?.map((page) =>
-          page.map((order) =>
-            orderIds.includes(order.id)
-              ? { ...order, status: newStatus }
-              : order
-          )
-        ),
-      };
-    });
+      setSelectedOrderIds([]);
+    },
+    [queryClient, queryKey, selectedOrderIds]
+  );
 
-    try {
-      if (isMassAction) {
-        await ordersRepository().updateBatchOrderStatus(
-          selectedOrderIds,
-          newStatus
-        );
-      } else {
-        await ordersRepository().updateOrderStatus(orderId, newStatus);
-      }
-    } catch (err) {
-      queryClient.invalidateQueries({ queryKey });
-      console.error('Failed to update order status:', err);
-    }
-
-    setSelectedOrderIds([]);
-  };
-
-  const toggleOrderId = (orderId: string) => {
+  const toggleOrderId = useCallback((orderId: string) => {
     setSelectedOrderIds((prev) =>
       prev.includes(orderId)
         ? prev.filter((id) => id !== orderId)
         : [...prev, orderId]
     );
-  };
+  }, []);
 
   return {
     data,
