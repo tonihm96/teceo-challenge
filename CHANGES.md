@@ -16,6 +16,7 @@
   - A busca pelos pedidos foi reestruturada para buscar primeiro os dados em Orders, buscar os itens relacionados em lote, e depois unir os dados em memória, reduzindo o número de conexões com o banco de dados e eliminando o problema de N+1 queries. A lógica de cálculo dos totais foi mantida, mas agora opera sobre os dados já carregados em memória
   - A consulta para contar o total de registros foi otimizada para contar os registros diretamente na tabela de Orders, e usar JOIN apenas se necessário (quando há filtro por nome ou email do cliente)
   - Se o total de registros for zero, a consulta principal é evitada e uma página vazia é retornada imediatamente
+- No banco de dados diversos índices foram adicionados para otimizar as consultas de listagem de ProductColors e Orders, especialmente para os filtros e junções mais comuns (detalhes dos índices criados estão comentados nos arquivos de migrations)
 
 ## Frontend
 
