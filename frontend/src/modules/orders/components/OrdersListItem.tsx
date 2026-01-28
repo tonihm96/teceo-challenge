@@ -19,7 +19,7 @@ import type { Ref } from 'react';
 interface OrdersListItemProps {
   ref?: Ref<HTMLTableRowElement>; // react 19 allows passing ref as prop
   item: ListItem;
-  onChangeStatus: (newStatus: OrderStatus) => void;
+  onChangeStatus: (newStatus: OrderStatus, orderId: string) => void;
   isToggled: boolean;
   onToggle: (orderId: string) => void;
 }
@@ -81,7 +81,7 @@ const OrdersListItem = ({
           variant="filled"
           size="small"
           value={item.status}
-          onChange={(e) => onChangeStatus(e.target.value)}
+          onChange={(e) => onChangeStatus(e.target.value, item.id)}
           MenuProps={{
             PaperProps: {
               sx: { ...(isToggled && coolToggledAnimation) },
